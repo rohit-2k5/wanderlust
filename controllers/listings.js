@@ -77,16 +77,16 @@ module.exports.updatelisting = async (req, res) => {
         }
 
         // Recalculate coordinates if location or country changed
-        const locationText = `${listing.location}, ${listing.country}`;
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`);
-        const data = await response.json();
+        // const locationText = `${listing.location}, ${listing.country}`;
+        // const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`);
+        // const data = await response.json();
 
-        if (data && data.length > 0) {
-            listing.latitude = parseFloat(data[0].lat);
-            listing.longitude = parseFloat(data[0].lon);
-        } else {
-            console.log("⚠️ Geocoding failed. Coordinates not updated.");
-        }
+        // if (data && data.length > 0) {
+        //     listing.latitude = parseFloat(data[0].lat);
+        //     listing.longitude = parseFloat(data[0].lon);
+        // } else {
+        //     console.log("⚠️ Geocoding failed. Coordinates not updated.");
+        // }
 
         await listing.save();
         req.flash("success", "Listing updated successfully!");
