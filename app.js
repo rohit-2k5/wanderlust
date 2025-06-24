@@ -20,7 +20,6 @@ const User = require("./models/user.js");
 const listingrouter = require("./routes/listing.js");
 const reviewrouter = require("./routes/review.js");
 const userrouter = require("./routes/user.js");
-const initRouter = require("./routes/init.js");   // <--- added init router
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
