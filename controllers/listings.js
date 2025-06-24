@@ -62,10 +62,6 @@ module.exports.updatelistingform = async(req, res)=>{
     res.render("listings/edit.ejs", {listing, originalimageurl});
 }
 
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
-
 module.exports.updatelisting = async (req, res) => {
     try {
         const { id } = req.params;
