@@ -32,16 +32,16 @@ module.exports.createlisting = async (req, res) => {
         }
 
         // Get location
-        const locationText = `${newlisting.location}, ${newlisting.country}`;
-        const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`);
-        const data = await response.json();
+        // const locationText = `${newlisting.location}, ${newlisting.country}`;
+        // const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`);
+        // const data = await response.json();
 
-        if (data && data.length > 0) {
-            newlisting.latitude = parseFloat(data[0].lat);
-            newlisting.longitude = parseFloat(data[0].lon);
-        } else {
-            console.log("⚠️ Geocoding failed. Coordinates not found.");
-        }
+        // if (data && data.length > 0) {
+        //     newlisting.latitude = parseFloat(data[0].lat);
+        //     newlisting.longitude = parseFloat(data[0].lon);
+        // } else {
+        //     console.log("⚠️ Geocoding failed. Coordinates not found.");
+        // }
 
         await newlisting.save();
         req.flash("success", "New listing added successfully!");
