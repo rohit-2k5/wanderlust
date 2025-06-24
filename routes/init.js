@@ -1,7 +1,21 @@
 const express = require("express");
 const router = express.Router();
+const mongoose = require("mongoose");
 const Listing = require("../models/listing");
 const initdata = require("../init/data");
+
+const dbUrl = process.env.ATLASDB_URL;
+main()
+.then(()=> {
+    console.log("connected to db (init route)");
+})
+.catch((err)=> {
+    console.log(err);
+});
+
+async function main() {
+    await mongoose.connect(dbUrl);
+}
 
 router.get("/init", async (req, res) => {
     await Listing.deleteMany({});
@@ -14,3 +28,4 @@ router.get("/init", async (req, res) => {
 });
 
 module.exports = router;
+
