@@ -94,9 +94,6 @@ app.use("/listings", listingrouter);
 app.use("/listings/:id/reviews", reviewrouter);
 app.use("/", userrouter);
 
-// init route --> only for development
-app.use("/", initRouter);
-
 // agar aise koi route ke pass req send karta hia jo exit nahi karta then it should return page not found error 
 app.all("*", (req, res, next) => {
     next(new ExpressError(404, "page not found"));
