@@ -2,7 +2,7 @@
 
 A simple Airbnb clone built with Node.js, Express, MongoDB, EJS.
 
-Live: [https://deltaproject-1-rjaj.onrender.com](https://deltaproject-1-rjaj.onrender.com/listings)
+Live: [https://deltaproject-1-rjaj.onrender.com/listings](https://deltaproject-1-rjaj.onrender.com/listings)
 
 ## Features
 
