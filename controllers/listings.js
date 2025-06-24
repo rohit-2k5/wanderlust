@@ -64,6 +64,8 @@ module.exports.updatelistingform = async(req, res)=>{
 
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
 module.exports.updatelisting = async (req, res) => {
     try {
         const { id } = req.params;
@@ -73,11 +75,13 @@ module.exports.updatelisting = async (req, res) => {
             runValidators: true,
         });
 
+        // If new image uploaded
         if (req.file) {
             listing.image = { url: req.file.path, filename: req.file.filename };
         }
 
-        // Recalculate coordinates if location/country changed
+        // Recalculate coordinates if location or country changed
+        /*
         const locationText = `${listing.location}, ${listing.country}`;
         const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(locationText)}`);
         const data = await response.json();
@@ -88,6 +92,7 @@ module.exports.updatelisting = async (req, res) => {
         } else {
             console.log("⚠️ Geocoding failed. Coordinates not updated.");
         }
+        */
 
         await listing.save();
         req.flash("success", "Listing updated successfully!");
@@ -99,6 +104,7 @@ module.exports.updatelisting = async (req, res) => {
         res.redirect("/listings");
     }
 };
+
 
 module.exports.deletelisting = async(req, res)=>{
     let {id} = req.params;
