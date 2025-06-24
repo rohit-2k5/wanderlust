@@ -1,8 +1,6 @@
-if(process.env.NODE_ENV != "production") {
-    require('dotenv').config()
+if (process.env.NODE_ENV != "production") {
+    require('dotenv').config();
 }
-
-
 
 const express = require("express");
 const app = express();
@@ -21,28 +19,28 @@ const User = require("./models/user.js");
 // requiring all the routes for all the models
 const listingrouter = require("./routes/listing.js");
 const reviewrouter = require("./routes/review.js");
-const userrouter = require("./routes/user.js")
+const userrouter = require("./routes/user.js");
+const initRouter = require("./routes/init.js");   // <--- added init router
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 app.use(methodoverride("_method"));
 app.engine("ejs", ejsMate);
 app.use(express.static(path.join(__dirname, "/public")));
 
-
 const dburl = process.env.ATLASDB_URL;
 
 main()
-.then(()=>{
-    console.log("connected to db");
-})
-.catch((err)=>{
-    console.log(err);
-});
+    .then(() => {
+        console.log("connected to db");
+    })
+    .catch((err) => {
+        console.log(err);
+    });
 
 async function main() {
-  await mongoose.connect(dburl);
+    await mongoose.connect(dburl);
 }
 
 // mongo store setup for session management
@@ -54,7 +52,7 @@ const store = MongoStore.create({
     touchAfter: 24 * 3600
 });
 
-store.on("error", function(e){
+store.on("error", function (e) {
     console.log("error in mongo store", e);
 });
 
@@ -64,17 +62,16 @@ const sessionOptions = {
     secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
-    cookie:  {
+    cookie: {
         expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
-        maxAge:  7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
         httpOnly: true,
     }
-}
+};
 
 // to use the session and flash 
 app.use(session(sessionOptions));
 app.use(flash());
-
 
 // for passport/passport local mongoose setup 
 app.use(passport.initialize());
@@ -85,34 +82,32 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 // middle ware to use the connect flash--> to show any messages
-// this is important because ejs me locals se hi kisi req.user ko access kr skte hai direct nahi 
 app.use((req, res, next) => {
     res.locals.success = req.flash("success");
     res.locals.error = req.flash("error");
     res.locals.curruser = req.user;
     next();
-})
+});
 
-
-
-// listing, reviews, user  ke sarre route use krne ke liye
+// listing, reviews, user ke sarre route use krne ke liye
 app.use("/listings", listingrouter);
 app.use("/listings/:id/reviews", reviewrouter);
 app.use("/", userrouter);
 
+// init route --> only for development
+app.use("/", initRouter);
 
 // agar aise koi route ke pass req send karta hia jo exit nahi karta then it should return page not found error 
-app.all("*", (req, res, next)=>{
+app.all("*", (req, res, next) => {
     next(new ExpressError(404, "page not found"));
-})
+});
 
 // error handle --> middle ware
-app.use((err, req, res, next)=>{
-    let {statusCode = 500, message = "something went wrong"} = err;
-    // res.status(statusCode).send(message);
-    res.render("error.ejs", {message});
-})
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = "something went wrong" } = err;
+    res.render("error.ejs", { message });
+});
 
-app.listen(8080, ()=>{
+app.listen(8080, () => {
     console.log("server started at port: 8080");
-})
+});
