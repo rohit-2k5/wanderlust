@@ -2,12 +2,12 @@
 
 A simple Airbnb clone built with Node.js, Express, MongoDB, EJS.
 
-Live: [https://deltaproject-1-rjaj.onrender.com](https://deltaproject-1-rjaj.onrender.com)
+Live: [https://deltaproject-1-rjaj.onrender.com](https://deltaproject-1-rjaj.onrender.com/listings)
 
 ## Features
 
 - User login/register
-- Add/Edit/Delete listings
+- Add/Edit/Delete listings/searchlisting
 - Upload images
 - Review system
 
