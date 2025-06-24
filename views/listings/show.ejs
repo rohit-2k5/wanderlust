@@ -1,0 +1,105 @@
+<% layout("/layouts/boilerplate") %>
+
+
+
+<div class="row mt-3 mb-3">
+    <div class="col-8 offset-2">
+        <h3><%= listing.title %></h3>
+        <div class="card" style="width: 30rem;">
+            <img class="showpageimage card-img-top" src="<%=listing.image.url%>" alt="Card image cap" >
+        </div>
+    </div>
+
+    <div class="col-9 offset-2">
+        <div class="card-body">
+            <li class="card-text">Owner: <i><%= listing.owner ? listing.owner.username : "Unknown" %></i></li>
+            <li class="card-text"><b>&#8377;<%=listing.price.toLocaleString("en-IN")%></b> /night</li>
+            <li class="card-text"><%= listing.description %></li>
+            <li class="card-text"><%= listing.location %></li>
+            <li class="card-text"><%= listing.country %></li>
+
+            <div class="edit-and-del-div">
+                <a href="/listings/<%= listing._id %>/edit" class="btn btn-dark">Edit this listing</a>
+                <form action="/listings/<%= listing._id %>?_method=delete" method="POST" class="delbtn">
+                    <button class="btn1">delete listing</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Review Form -->
+    <br>
+    <div class="col-9 offset-2 mt-3 mb-3">
+        <hr>
+        <h3>Leave a review</h3>
+        <form action="/listings/<%= listing.id %>/reviews" method="POST" novalidate class="needs-validation">
+            <label for="rating" class="form-label">Rating:</label>
+            <fieldset class="starability-slot">
+                <% for (let i = 1; i <= 5; i++) { %>
+                    <input type="radio" id="rate<%= i %>" name="review[rating]" value="<%= i %>" <%= i === 1 ? 'checked' : '' %> />
+                    <label for="rate<%= i %>" title="<%= i %> star"><%= i %> star</label>
+                <% } %>
+            </fieldset>
+
+            <div class="mb-3">
+                <label for="review" class="form-label">Comments</label>
+                <textarea name="review[comment]" id="review" cols="30" rows="5" placeholder="Write your review..." class="form-control" required></textarea>
+                <div class="invalid-feedback">Please write your review</div>
+            </div>
+
+            <button class="btn btn-outline-dark">Submit</button>
+        </form>
+    </div>
+
+    <!-- All Reviews -->
+    <div class="col-9 offset-2 mt-3 mb-3">
+        <hr>
+        <h3>All reviews</h3>
+        <br>
+        <div class="row">
+            <% for(let review of listing.reviews){ %>
+            <div class="col-5 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@<b><%= review.author ? review.author.username : "Unknown" %></b></h5>
+                        <p class="starability-result" data-rating="<%= review.rating %>">Rated: <%= review.rating %> stars</p>
+                        <p class="card-text"><%= review.comment %></p>
+
+                        <% if(curruser && curruser._id.equals(review.author._id)){ %>
+                        <form action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=delete" method="POST">
+                            <button class="btn btn-outline-danger btn-sm mt-2">Delete</button>
+                        </form>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+    </div>
+
+    <!-- Where you'll be -->
+    <div class="col-9 offset-2 mt-3 mb-3">
+        <h5>Where you’ll be</h5>
+        <p><%= listing.location %>, <%= listing.country %></p>
+    </div>
+
+    <!-- Map -->
+    <div id="map" class="col-9 offset-2" style="width: 75%; height: 450px; border-radius: 10px; margin-bottom: 30px;"></div>
+
+    <script>
+    const latitude = Number("<%= listing.latitude ? listing.latitude : 28.6139 %>");
+    const longitude = Number("<%= listing.longitude ? listing.longitude : 77.2090 %>");
+    const locationText = "<%= listing.location %>, <%= listing.country %>";
+    
+    const map = L.map('map').setView([latitude, longitude], 13);
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors'
+    }).addTo(map);
+
+    L.marker([latitude, longitude]).addTo(map)
+        .bindPopup(locationText)
+        .openPopup();
+</script>
+
+</div>
