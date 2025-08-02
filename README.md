@@ -1,4 +1,4 @@
-# Wanderlust - Airbnb Clone
+# Wanderlust - Airbnb Clone.
 
 A simple Airbnb clone built with Node.js, Express, MongoDB, EJS.
 
